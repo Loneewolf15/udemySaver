@@ -189,6 +189,53 @@ body::after {
   margin-bottom: 1.5rem;
 }
 
+/* Tabs */
+.login-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--panel-border);
+  padding-bottom: 10px;
+}
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-sec);
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 6px;
+}
+.tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+.tab-btn.active {
+  color: white;
+  background: rgba(108, 92, 231, 0.2);
+  border-bottom: 2px solid var(--accent);
+}
+
+/* Select Dropdown */
+.quality-select {
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--panel-border);
+  color: var(--text-primary);
+  border-radius: 4px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+}
+.quality-select option {
+  background: var(--bg-color);
+  color: white;
+}
+
 #course-search {
   padding: 10px 16px;
   border-radius: 20px;

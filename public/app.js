@@ -2,10 +2,14 @@ const DOM = {
   overlay: document.getElementById("login-overlay"),
   form: document.getElementById("login-form"),
   tokenInput: document.getElementById("access-token"),
+  emailInput: document.getElementById("login-email"),
+  passwordInput: document.getElementById("login-password"),
   loginBtn: document.getElementById("login-btn"),
   btnText: document.querySelector(".btn-text"),
   spinner: document.querySelector(".spinner"),
   errorMsg: document.getElementById("login-error"),
+  tabBtns: document.querySelectorAll(".tab-btn"),
+  tabContents: document.querySelectorAll(".tab-content"),
 
   appContainer: document.getElementById("app-container"),
   dashView: document.getElementById("dashboard-view"),
@@ -36,6 +40,18 @@ function init() {
   DOM.logoutBtn.addEventListener("click", handleLogout);
   DOM.backBtn.addEventListener("click", () => switchView(DOM.dashView));
   DOM.searchInput.addEventListener("input", handleSearch);
+
+  // Initialize Tabs
+  DOM.tabBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      DOM.tabBtns.forEach((b) => b.classList.remove("active"));
+      DOM.tabContents.forEach((c) => c.classList.add("hidden"));
+
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.tab).classList.remove("hidden");
+      DOM.errorMsg.classList.add("hidden");
+    });
+  });
 }
 
 // --- JS API Wrapper ---
@@ -50,24 +66,41 @@ async function api(endpoint, options = {}) {
 // --- Auth Handling ---
 async function handleLogin(e) {
   if (e) e.preventDefault();
-  const token = DOM.tokenInput.value.trim();
-  if (!token) return;
+
+  let fetchUrl, payload;
+  let activeTab = document.querySelector(".tab-btn.active").dataset.tab;
+
+  if (activeTab === "token-tab") {
+    const token = DOM.tokenInput.value.trim();
+    if (!token) return;
+    fetchUrl = "/api/auth";
+    payload = { access_token: token };
+  } else {
+    const email = DOM.emailInput.value.trim();
+    const password = DOM.passwordInput.value.trim();
+    if (!email || !password) return;
+    fetchUrl = "/api/login";
+    payload = { email, password };
+  }
 
   setLoading(true);
   DOM.errorMsg.classList.add("hidden");
 
   try {
-    const res = await fetch("/api/auth", {
+    const res = await fetch(fetchUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ access_token: token }),
+      body: JSON.stringify(payload),
     });
     const data = await res.json();
 
     if (!res.ok) throw new Error(data.detail);
 
-    state.token = token;
-    localStorage.setItem("udemy_token", token);
+    // If we used email/password, the API returns the access_token it fetched
+    const tokenToSave = data.access_token || payload.access_token;
+
+    state.token = tokenToSave;
+    localStorage.setItem("udemy_token", tokenToSave);
     loadCourses();
   } catch (err) {
     DOM.errorMsg.textContent = err.message;
@@ -227,9 +260,17 @@ function renderCurriculum(items) {
       let hasAttachments =
         item.supplementary_assets && item.supplementary_assets.length > 0;
 
-      // Render Video Download Button
+      // Render Video Quality Select & Download Button
       if (type === "Video") {
-        actionHtml += `<button class="dl-btn" onclick="downloadLecture(${state.currentCourse.id}, ${item.id}, '${(item.title || "Video").replace(/'/g, "\\'")}')">⬇️ Video</button>`;
+        // We defer loading the qualities until the user clicks, OR we fetch them dynamically
+        // if we decide to load them per-lecture (fetching qualities per lecture upfront is slow).
+        // Let's create a select that populates on hover/click to spare API calls.
+        actionHtml += `
+            <select class="quality-select" id="quality-${item.id}" onclick="loadQualities(${state.currentCourse.id}, ${item.id}, this)">
+                <option value="">Highest</option>
+            </select>
+            <button class="dl-btn" onclick="downloadLecture(${state.currentCourse.id}, ${item.id}, '${(item.title || "Video").replace(/'/g, "\\'")}', document.getElementById('quality-${item.id}').value)">⬇️ Video</button>
+        `;
       } else if (type === "Article" || type === "Quiz") {
         actionHtml += `<span class="badge-locked">${type}</span>`;
       }
@@ -256,7 +297,35 @@ function renderCurriculum(items) {
 }
 
 // Global Download Functions
-window.downloadLecture = async function (courseId, lectureId, title) {
+window.loadQualities = async function (courseId, lectureId, selectElement) {
+  if (selectElement.dataset.loaded) return;
+
+  const originalText = selectElement.options[0].text;
+  selectElement.options[0].text = "Loading...";
+
+  try {
+    const data = await api(`lecture-qualities/${courseId}/${lectureId}`);
+    if (data.is_drm) {
+      selectElement.innerHTML = '<option value="">DRM locked</option>';
+    } else if (data.qualities && data.qualities.length > 0) {
+      selectElement.innerHTML = ""; // clear options
+      data.qualities.forEach((q) => {
+        const opt = document.createElement("option");
+        opt.value = q;
+        opt.text = q + "p";
+        selectElement.appendChild(opt);
+      });
+    } else {
+      selectElement.options[0].text = "Default";
+    }
+  } catch (err) {
+    selectElement.options[0].text = "Highest";
+  }
+
+  selectElement.dataset.loaded = "true";
+};
+
+window.downloadLecture = async function (courseId, lectureId, title, quality) {
   const btn = event.currentTarget;
   const originalText = btn.innerHTML;
 
@@ -264,7 +333,10 @@ window.downloadLecture = async function (courseId, lectureId, title) {
     btn.disabled = true;
     btn.innerHTML = "⏳ Resolving...";
 
-    const data = await api(`resolve-download/${courseId}/${lectureId}`);
+    let url = quality
+      ? `resolve-download/${courseId}/${lectureId}?quality=${quality}`
+      : `resolve-download/${courseId}/${lectureId}`;
+    const data = await api(url);
 
     if (data.status === "drm_locked") {
       btn.outerHTML = `<span class="badge-locked">🔒 DRM Protected</span>`;

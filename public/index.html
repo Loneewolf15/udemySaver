@@ -38,17 +38,31 @@
           <h2>Udemy Downloader</h2>
         </div>
         <p class="subtitle">
-          Enter your Access Token to view and download your enrolled courses.
+          Select your preferred login method to view and download your enrolled courses.
         </p>
 
         <form id="login-form">
-          <div class="input-group">
-            <input
-              type="password"
-              id="access-token"
-              placeholder="access_token=..."
-              required
-            />
+          <div class="login-tabs">
+            <button type="button" class="tab-btn active" data-tab="token-tab">Access Token</button>
+            <button type="button" class="tab-btn" data-tab="cred-tab">Email & Password</button>
+          </div>
+          
+          <div id="token-tab" class="tab-content active">
+            <div class="input-group">
+              <input type="password" id="access-token" placeholder="access_token=..." />
+            </div>
+          </div>
+          
+          <div id="cred-tab" class="tab-content hidden">
+            <div class="input-group" style="margin-bottom: 10px;">
+              <input type="email" id="login-email" placeholder="Email Address" />
+            </div>
+            <div class="input-group">
+              <input type="password" id="login-password" placeholder="Password" />
+            </div>
+            <p style="font-size: 0.8rem; color: var(--locked); margin-top: 10px; text-align: left; line-height: 1.4;">
+              ⚠️ Warning: Email/Password login may fail if Udemy triggers a Captcha. The Access Token method is recommended.
+            </p>
           </div>
           <button type="submit" id="login-btn" class="primary-btn">
             <span class="btn-text">Authenticate</span>
