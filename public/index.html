@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Udemy Web Downloader</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Login Modal -->
+    <div id="login-overlay" class="overlay active">
+      <div class="glass-panel login-card">
+        <div class="logo-area">
+          <svg
+            width="40"
+            height="40"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="url(#gradient)"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#8a2be2" />
+                <stop offset="100%" stop-color="#4a00e0" />
+              </linearGradient>
+            </defs>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <h2>Udemy Downloader</h2>
+        </div>
+        <p class="subtitle">
+          Enter your Access Token to view and download your enrolled courses.
+        </p>
+
+        <form id="login-form">
+          <div class="input-group">
+            <input
+              type="password"
+              id="access-token"
+              placeholder="access_token=..."
+              required
+            />
+          </div>
+          <button type="submit" id="login-btn" class="primary-btn">
+            <span class="btn-text">Authenticate</span>
+            <div class="spinner hidden"></div>
+          </button>
+          <div id="login-error" class="error-msg hidden"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Main Dashboard Application -->
+    <div id="app-container" class="container hidden">
+      <header class="glass-header">
+        <div class="header-left">
+          <h2>My Courses</h2>
+        </div>
+        <div class="header-right">
+          <button id="logout-btn" class="secondary-btn">Logout</button>
+        </div>
+      </header>
+
+      <!-- Course Grid -->
+      <main id="dashboard-view" class="view active">
+        <div class="grid-header">
+          <h3>Select a course to download</h3>
+          <div class="search-bar">
+            <input
+              type="text"
+              id="course-search"
+              placeholder="Search courses..."
+            />
+          </div>
+        </div>
+        <div id="courses-grid" class="courses-grid">
+          <!-- Courses injected via JS -->
+        </div>
+      </main>
+
+      <!-- Course Detail / Curriculum View -->
+      <main id="course-detail-view" class="view hidden">
+        <div class="detail-header">
+          <button id="back-btn" class="text-btn">← Back to Courses</button>
+          <h2 id="detail-course-title">Course Title</h2>
+        </div>
+
+        <div id="curriculum-container" class="curriculum-container glass-panel">
+          <div class="curr-loading">
+            <div class="spinner large"></div>
+            <p>Fetching curriculum...</p>
+          </div>
+          <!-- Content injected via JS -->
+        </div>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
