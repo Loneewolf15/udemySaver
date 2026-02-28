@@ -51,6 +51,9 @@
             <div class="input-group">
               <input type="password" id="access-token" placeholder="access_token=..." />
             </div>
+            <p style="font-size: 0.8rem; margin-top: 10px; text-align: left;">
+              <a href="#" id="help-link" class="help-link">How do I get my access token?</a>
+            </p>
           </div>
           
           <div id="cred-tab" class="tab-content hidden">
@@ -116,6 +119,27 @@
           <!-- Content injected via JS -->
         </div>
       </main>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="overlay hidden">
+      <div class="glass-panel help-card">
+        <div class="help-header">
+          <h3>How to get your Access Token</h3>
+          <button id="close-help" class="close-btn">&times;</button>
+        </div>
+        <div class="help-content">
+          <ol>
+            <li>Open a new tab and go to <strong>udemy.com</strong>.</li>
+            <li>Log in to your Udemy account normally.</li>
+            <li>Press <strong>F12</strong> (or Right-Click &rarr; Inspect) to open Developer Tools.</li>
+            <li>Go to the <strong>Application</strong> tab (in Chrome/Edge) or <strong>Storage</strong> tab (in Firefox).</li>
+            <li>On the left sidebar, expand <strong>Cookies</strong> and click on <code>https://www.udemy.com</code>.</li>
+            <li>Search for the name <strong>access_token</strong> in the list.</li>
+            <li>Double-click its <strong>Value</strong>, copy it, and paste it here!</li>
+          </ol>
+        </div>
+      </div>
     </div>
 
     <script src="app.js"></script>

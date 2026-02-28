@@ -422,3 +422,63 @@ body::after {
   padding: 3rem;
   color: var(--text-sec);
 }
+
+/* Help Modal / Link */
+.help-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+.help-link:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.help-card {
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+}
+
+.help-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--panel-border);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.help-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-sec);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.close-btn:hover {
+  color: var(--error);
+}
+
+.help-content ol {
+  line-height: 1.6;
+  color: var(--text-primary);
+  padding-left: 1.2rem;
+  margin: 0;
+}
+.help-content li {
+  margin-bottom: 10px;
+}
+.help-content code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--locked);
+}

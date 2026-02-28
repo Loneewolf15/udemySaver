@@ -22,6 +22,10 @@ const DOM = {
   backBtn: document.getElementById("back-btn"),
   detailTitle: document.getElementById("detail-course-title"),
   currContainer: document.getElementById("curriculum-container"),
+
+  helpLink: document.getElementById("help-link"),
+  helpModal: document.getElementById("help-modal"),
+  closeHelpBtn: document.getElementById("close-help"),
 };
 
 let state = {
@@ -40,6 +44,22 @@ function init() {
   DOM.logoutBtn.addEventListener("click", handleLogout);
   DOM.backBtn.addEventListener("click", () => switchView(DOM.dashView));
   DOM.searchInput.addEventListener("input", handleSearch);
+
+  // Help Modal Bindings
+  if (DOM.helpLink && DOM.helpModal && DOM.closeHelpBtn) {
+    DOM.helpLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      DOM.helpModal.classList.remove("hidden");
+    });
+    DOM.closeHelpBtn.addEventListener("click", () => {
+      DOM.helpModal.classList.add("hidden");
+    });
+    DOM.helpModal.addEventListener("click", (e) => {
+      if (e.target === DOM.helpModal) {
+        DOM.helpModal.classList.add("hidden");
+      }
+    });
+  }
 
   // Initialize Tabs
   DOM.tabBtns.forEach((btn) => {
