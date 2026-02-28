@@ -54,7 +54,8 @@ class UdemyAPI:
             # 3. Extract the access_token cookie
             access_token = session.cookies.get("access_token")
             if not access_token:
-                return {"error": "Login succeeded but no access_token was returned by Udemy."}
+                # If 200 OK but no token, Udemy usually requires a 6-digit OTP or a browser security check.
+                return {"error": "Login succeeded, but Udemy requires a 6-digit OTP or Captcha verification. Please use your browser to extract the access_token manually."}
                 
             return {"access_token": access_token}
             
