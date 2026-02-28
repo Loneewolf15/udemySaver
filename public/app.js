@@ -118,6 +118,7 @@ function handleLogout() {
   state.token = null;
   localStorage.removeItem("udemy_token");
   DOM.appContainer.classList.add("hidden");
+  DOM.overlay.classList.remove("hidden");
   DOM.overlay.classList.add("active");
   DOM.tokenInput.value = "";
 }
@@ -152,11 +153,13 @@ async function loadCourses() {
     renderCourses(state.courses);
 
     DOM.overlay.classList.remove("active");
+    DOM.overlay.classList.add("hidden");
     DOM.appContainer.classList.remove("hidden");
     switchView(DOM.dashView);
   } catch (err) {
     handleLogout();
-    DOM.errorMsg.textContent = "Session expired. Please login again.";
+    DOM.errorMsg.textContent =
+      "Session expired or error: " + (err.stack || err.message);
     DOM.errorMsg.classList.remove("hidden");
   } finally {
     setLoading(false);
