@@ -70,6 +70,12 @@ function init() {
       btn.classList.add("active");
       document.getElementById(btn.dataset.tab).classList.remove("hidden");
       DOM.errorMsg.classList.add("hidden");
+
+      if (btn.dataset.tab === "ext-tab") {
+        DOM.loginBtn.classList.add("hidden");
+      } else {
+        DOM.loginBtn.classList.remove("hidden");
+      }
     });
   });
 }
@@ -96,11 +102,7 @@ async function handleLogin(e) {
     fetchUrl = "/api/auth";
     payload = { access_token: token };
   } else {
-    const email = DOM.emailInput.value.trim();
-    const password = DOM.passwordInput.value.trim();
-    if (!email || !password) return;
-    fetchUrl = "/api/login";
-    payload = { email, password };
+    return;
   }
 
   setLoading(true);

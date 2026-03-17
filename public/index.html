@@ -25,11 +25,26 @@
 
         <form id="login-form">
           <div class="login-tabs">
-            <button type="button" class="tab-btn active" data-tab="token-tab">Access Token</button>
-            <button type="button" class="tab-btn" data-tab="cred-tab">Email & Password</button>
+            <button type="button" class="tab-btn active" data-tab="ext-tab">Use Extension</button>
+            <button type="button" class="tab-btn" data-tab="token-tab">Manual Token</button>
           </div>
           
-          <div id="token-tab" class="tab-content active">
+          <div id="ext-tab" class="tab-content active" style="text-align: center;">
+            <p style="font-size: 0.85rem; color: var(--text-sec); margin-bottom: 20px; line-height: 1.5;">
+              For the most secure and seamless experience, install the official Udemy Saver Browser Extension. It securely grabs your active session directly from Udemy without any copy-pasting.
+            </p>
+            <a href="udemy-saver-extension.zip" download class="secondary-btn" style="display: inline-block; text-decoration: none; padding: 12px 20px; font-weight: bold; margin-bottom: 20px; border-radius: 8px;">
+              ⬇️ Download Extension (.zip)
+            </a>
+            <ol style="font-size: 0.8rem; color: var(--text-sec); text-align: left; padding-left: 20px; margin: 0; line-height: 1.6;">
+              <li>Extract the downloaded <code>.zip</code> file.</li>
+              <li>Open <code>chrome://extensions</code> and enable <strong>Developer mode</strong>.</li>
+              <li>Click <strong>Load unpacked</strong> and select the extracted folder.</li>
+              <li>Click the extension icon while logged into Udemy!</li>
+            </ol>
+          </div>
+
+          <div id="token-tab" class="tab-content hidden">
             <div class="input-group">
               <input type="password" id="access-token" placeholder="access_token=..." />
             </div>
@@ -38,18 +53,7 @@
             </p>
           </div>
           
-          <div id="cred-tab" class="tab-content hidden">
-            <div class="input-group" style="margin-bottom: 10px;">
-              <input type="email" id="login-email" placeholder="Email Address" />
-            </div>
-            <div class="input-group">
-              <input type="password" id="login-password" placeholder="Password" />
-            </div>
-            <p style="font-size: 0.8rem; color: var(--locked); margin-top: 10px; text-align: left; line-height: 1.4;">
-              ⚠️ Warning: Udemy may enforce a 6-digit OTP code or Captcha lock. If this occurs, please fallback to using the Access Token method.
-            </p>
-          </div>
-          <button type="submit" id="login-btn" class="primary-btn">
+          <button type="submit" id="login-btn" class="primary-btn hidden">
             <span class="btn-text">Authenticate</span>
             <div class="spinner hidden"></div>
           </button>
