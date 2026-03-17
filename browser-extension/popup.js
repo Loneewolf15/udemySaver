@@ -50,7 +50,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     let targetTab = null;
     if (tabs.length > 0) {
       // Find the specific tab if possible
-      targetTab = tabs.find((t) => t.url.startsWith(TARGET_SA_URL)) || tabs[0];
+      targetTab =
+        tabs.find((t) => t.url.includes("udemy-saver.vercel.app")) || tabs[0];
       await chrome.tabs.update(targetTab.id, { active: true });
     } else {
       // Create new tab
