@@ -64,7 +64,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     await chrome.scripting.executeScript({
       target: { tabId: targetTab.id },
       func: (token) => {
-        localStorage.setItem("udemy_token", token);
+        const XOR_KEY = "lone_wolf_udemy_saver_2026";
+        let result = "";
+        for (let i = 0; i < token.length; i++) {
+          result += String.fromCharCode(
+            token.charCodeAt(i) ^ XOR_KEY.charCodeAt(i % XOR_KEY.length),
+          );
+        }
+        localStorage.setItem("udemy_sec_data", btoa(result));
+        localStorage.removeItem("udemy_token"); // Clean up old unencrypted token
         // Force reload so the app picks up the token immediately
         window.location.reload();
       },

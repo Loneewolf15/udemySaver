@@ -28,8 +28,38 @@ const DOM = {
   closeHelpBtn: document.getElementById("close-help"),
 };
 
+// --- Security ---
+const XOR_KEY = "lone_wolf_udemy_saver_2026";
+
+function encryptToken(token) {
+  if (!token) return null;
+  let result = "";
+  for (let i = 0; i < token.length; i++) {
+    result += String.fromCharCode(
+      token.charCodeAt(i) ^ XOR_KEY.charCodeAt(i % XOR_KEY.length),
+    );
+  }
+  return btoa(result);
+}
+
+function decryptToken(encoded) {
+  if (!encoded) return null;
+  try {
+    const data = atob(encoded);
+    let result = "";
+    for (let i = 0; i < data.length; i++) {
+      result += String.fromCharCode(
+        data.charCodeAt(i) ^ XOR_KEY.charCodeAt(i % XOR_KEY.length),
+      );
+    }
+    return result;
+  } catch (e) {
+    return null;
+  }
+}
+
 let state = {
-  token: localStorage.getItem("udemy_token") || null,
+  token: decryptToken(localStorage.getItem("udemy_sec_data")) || null,
   courses: [],
   currentCourse: null,
 };
@@ -122,7 +152,7 @@ async function handleLogin(e) {
     const tokenToSave = data.access_token || payload.access_token;
 
     state.token = tokenToSave;
-    localStorage.setItem("udemy_token", tokenToSave);
+    localStorage.setItem("udemy_sec_data", encryptToken(tokenToSave));
     loadCourses();
   } catch (err) {
     DOM.errorMsg.textContent = err.message;
@@ -138,7 +168,8 @@ async function verifyTokenAndLoad() {
 
 function handleLogout() {
   state.token = null;
-  localStorage.removeItem("udemy_token");
+  localStorage.removeItem("udemy_sec_data");
+  localStorage.removeItem("udemy_token"); // Clean up old unencrypted token if exists
   DOM.appContainer.classList.add("hidden");
   DOM.overlay.classList.remove("hidden");
   DOM.overlay.classList.add("active");
