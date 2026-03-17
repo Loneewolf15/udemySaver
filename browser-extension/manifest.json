@@ -19,6 +19,7 @@
   "permissions": ["cookies", "tabs", "scripting"],
   "host_permissions": [
     "*://*.udemy.com/*",
+    "*://udemy-saver.vercel.app/*",
     "*://localhost/*",
     "*://127.0.0.1/*"
   ]

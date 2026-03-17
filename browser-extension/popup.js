@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let extractedToken = null;
   const UDEMY_URL = "https://www.udemy.com";
-  const TARGET_SA_URL = "http://localhost:8000";
+  const TARGET_SA_URL = "https://udemy-saver.vercel.app";
 
   function switchState(stateEl) {
     [loadingState, missingState, foundState].forEach((el) =>
@@ -42,12 +42,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Handle Launch & Connect
   connectBtn.addEventListener("click", async () => {
-    // 1. Find if localhost:8000 is already open
-    const tabs = await chrome.tabs.query({ url: "*://localhost/*" });
+    // 1. Find if the vercel app is already open
+    const tabs = await chrome.tabs.query({
+      url: "*://udemy-saver.vercel.app/*",
+    });
 
     let targetTab = null;
     if (tabs.length > 0) {
-      // Find the specific localhost:8000 tab if possible
+      // Find the specific tab if possible
       targetTab = tabs.find((t) => t.url.startsWith(TARGET_SA_URL)) || tabs[0];
       await chrome.tabs.update(targetTab.id, { active: true });
     } else {
