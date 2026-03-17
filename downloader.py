@@ -1,6 +1,8 @@
 import os
 import requests
 import subprocess
+import tempfile
+import shutil
 from urllib.parse import urlparse
 
 class Downloader:
@@ -76,8 +78,42 @@ class Downloader:
         
         try:
             subprocess.run(command, check=True)
+            
+            # Apply branding via fast FFmpeg multiplexing
+            print(f"    Applying branding metadata and soft subtitles...")
+            
+            # 1. Create a temporary SRT file
+            fd, srt_path = tempfile.mkstemp(suffix=".srt")
+            with os.fdopen(fd, 'w') as f:
+                f.write("1\n00:00:00,000 --> 00:00:15,000\nDownloaded from Udemy Saver by Lonewolf\n")
+            
+            # 2. Temporary output video path
+            temp_output = destination_path + ".temp.mp4"
+            
+            # 3. Fast FFmpeg mux (copy video/audio, convert sub to mov_text, add metadata)
+            ffmpeg_cmd = [
+                'ffmpeg', '-y',
+                '-i', destination_path,
+                '-i', srt_path,
+                '-c', 'copy',
+                '-c:s', 'mov_text',
+                '-metadata', f'title={title}',
+                '-metadata', 'description=Downloaded from Udemy Saver by Lonewolf',
+                '-metadata', 'comment=Downloaded from Udemy Saver by Lonewolf',
+                temp_output
+            ]
+            
+            subprocess.run(ffmpeg_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            
+            # 4. Replace original file with branded file
+            shutil.move(temp_output, destination_path)
+            
+            # 5. Cleanup
+            os.remove(srt_path)
+            print(f"    Branding applied successfully.")
+            
         except subprocess.CalledProcessError as e:
-            print(f"Error downloading video with yt-dlp: {e}")
+            print(f"Error downloading or branding video: {e}")
             print("Note: Udemy DRM videos cannot be downloaded with this script.")
         except FileNotFoundError:
-            print("yt-dlp is not installed or not in PATH. Please install it to download videos.")
+            print("yt-dlp or ffmpeg is not installed or not in PATH. Please install them to download and brand videos.")

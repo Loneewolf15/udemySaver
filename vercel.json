@@ -1,0 +1,29 @@
+{
+  "builds": [
+    {
+      "src": "api.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "public/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api.py"
+    },
+    {
+      "src": "/app/(.*)",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/",
+      "status": 308,
+      "headers": {
+        "Location": "/app/index.html"
+      }
+    }
+  ]
+}

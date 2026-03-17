@@ -1,14 +1,14 @@
 :root {
-  --bg-color: #0d0f17;
-  --panel-bg: rgba(255, 255, 255, 0.03);
-  --panel-border: rgba(255, 255, 255, 0.08);
-  --text-primary: #f0f2f5;
-  --text-sec: #8b92a5;
-  --accent: #6c5ce7;
-  --accent-hover: #5a4bcf;
-  --success: #00d2d3;
-  --error: #ff6b6b;
-  --locked: #feca57;
+  --bg-color: #120c08;
+  --panel-bg: rgba(255, 200, 100, 0.03);
+  --panel-border: rgba(255, 200, 100, 0.1);
+  --text-primary: #fff8eb;
+  --text-sec: #b09a82;
+  --accent: #ff914d;
+  --accent-hover: #ff7622;
+  --success: #f39c12;
+  --error: #e74c3c;
+  --locked: #d35400;
   --blur: blur(12px);
 }
 
@@ -31,8 +31,8 @@ body::before {
   height: 50%;
   background: radial-gradient(
     circle,
-    rgba(108, 92, 231, 0.15) 0%,
-    rgba(13, 15, 23, 0) 70%
+    rgba(255, 145, 77, 0.12) 0%,
+    rgba(18, 12, 8, 0) 70%
   );
   z-index: -1;
 }
@@ -46,8 +46,8 @@ body::after {
   height: 60%;
   background: radial-gradient(
     circle,
-    rgba(0, 210, 211, 0.1) 0%,
-    rgba(13, 15, 23, 0) 70%
+    rgba(243, 156, 18, 0.08) 0%,
+    rgba(18, 12, 8, 0) 70%
   );
   z-index: -1;
 }
@@ -66,7 +66,7 @@ body::after {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(13, 15, 23, 0.8);
+  background: rgba(18, 12, 8, 0.85);
   backdrop-filter: var(--blur);
   z-index: 1000;
 }
@@ -76,7 +76,7 @@ body::after {
   border: 1px solid var(--panel-border);
   backdrop-filter: var(--blur);
   border-radius: 16px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
 .login-card {
@@ -89,9 +89,16 @@ body::after {
 .logo-area {
   margin-bottom: 1.5rem;
 }
+.logo-area img {
+  width: 64px;
+  height: 64px;
+}
 .logo-area h2 {
   margin: 10px 0 0 0;
   font-size: 1.5rem;
+  background: linear-gradient(135deg, #ffc371, #ff5f6d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .subtitle {
   color: var(--text-sec);
@@ -102,7 +109,7 @@ body::after {
 .input-group input {
   width: 100%;
   padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--panel-border);
   border-radius: 8px;
   color: var(--text-primary);
@@ -114,18 +121,19 @@ body::after {
 
 .input-group input:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(255, 145, 77, 0.3);
 }
 
 .primary-btn {
   width: 100%;
   padding: 12px;
   margin-top: 1.5rem;
-  background: var(--accent);
-  color: white;
+  background: linear-gradient(135deg, var(--accent) 0%, #d35400 100%);
+  color: #120c08;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: 0.3s;
   display: flex;
@@ -135,8 +143,8 @@ body::after {
 }
 
 .primary-btn:hover {
-  background: var(--accent-hover);
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 145, 77, 0.4);
 }
 
 /* Containers */
@@ -165,7 +173,8 @@ body::after {
   transition: 0.3s;
 }
 .secondary-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 145, 77, 0.1);
+  border-color: var(--accent);
 }
 
 .text-btn {
@@ -178,7 +187,7 @@ body::after {
   transition: 0.3s;
 }
 .text-btn:hover {
-  color: var(--text-primary);
+  color: var(--accent);
 }
 
 /* Course Grid */
@@ -211,18 +220,18 @@ body::after {
 }
 .tab-btn:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 200, 100, 0.05);
 }
 .tab-btn.active {
-  color: white;
-  background: rgba(108, 92, 231, 0.2);
+  color: #fff8eb;
+  background: rgba(255, 145, 77, 0.15);
   border-bottom: 2px solid var(--accent);
 }
 
 /* Select Dropdown */
 .quality-select {
   padding: 6px 10px;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
   border: 1px solid var(--panel-border);
   color: var(--text-primary);
   border-radius: 4px;
@@ -240,10 +249,13 @@ body::after {
   padding: 10px 16px;
   border-radius: 20px;
   border: 1px solid var(--panel-border);
-  background: var(--panel-bg);
+  background: rgba(0, 0, 0, 0.2);
   color: white;
   width: 250px;
   outline: none;
+}
+#course-search:focus {
+  border-color: var(--accent);
 }
 
 .courses-grid {
@@ -266,7 +278,7 @@ body::after {
 .course-card:hover {
   transform: translateY(-5px);
   border-color: var(--accent);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 25px rgba(255, 145, 77, 0.15);
 }
 
 .course-title {
@@ -302,17 +314,19 @@ body::after {
 
 .chapter-box {
   margin-bottom: 1.5rem;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   overflow: hidden;
+  border: 1px solid rgba(255, 200, 100, 0.05);
 }
 
 .chapter-title {
   padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 200, 100, 0.05);
   margin: 0;
   font-size: 1.1rem;
   border-bottom: 1px solid var(--panel-border);
+  color: #ffd89c;
 }
 
 .lecture-list {
@@ -326,14 +340,14 @@ body::after {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 200, 100, 0.05);
   transition: 0.2s;
 }
 .lecture-item:last-child {
   border-bottom: none;
 }
 .lecture-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 200, 100, 0.05);
 }
 
 .lecture-info {
@@ -354,9 +368,9 @@ body::after {
 .dl-btn {
   padding: 6px 12px;
   border-radius: 4px;
-  border: none;
-  background: rgba(108, 92, 231, 0.2);
-  color: #a29bfe;
+  border: 1px solid var(--accent);
+  background: rgba(255, 145, 77, 0.1);
+  color: var(--accent);
   font-size: 0.85rem;
   cursor: pointer;
   transition: 0.2s;
@@ -366,15 +380,18 @@ body::after {
 }
 .dl-btn:hover:not(:disabled) {
   background: var(--accent);
-  color: white;
+  color: #120c08;
+  font-weight: 500;
 }
 .dl-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  border-color: var(--text-sec);
+  color: var(--text-sec);
 }
 
 .badge-locked {
-  background: rgba(254, 202, 87, 0.1);
+  background: rgba(211, 84, 0, 0.15);
   color: var(--locked);
   padding: 4px 8px;
   border-radius: 4px;
@@ -382,12 +399,13 @@ body::after {
   display: flex;
   align-items: center;
   gap: 5px;
+  border: 1px solid rgba(211, 84, 0, 0.3);
 }
 
 .badge-attachment {
-  background: rgba(0, 210, 211, 0.1);
+  background: rgba(243, 156, 18, 0.1);
   color: var(--success);
-  border: 1px solid rgba(0, 210, 211, 0.2);
+  border: 1px solid rgba(243, 156, 18, 0.3);
 }
 
 .error-msg {
@@ -400,9 +418,9 @@ body::after {
 .spinner {
   width: 20px;
   height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 200, 100, 0.2);
   border-radius: 50%;
-  border-top-color: #fff;
+  border-top-color: var(--accent);
   animation: spin 1s ease-in-out infinite;
 }
 .spinner.large {
@@ -410,7 +428,6 @@ body::after {
   height: 40px;
   border-width: 3px;
   margin: 0 auto 15px auto;
-  border-top-color: var(--accent);
 }
 @keyframes spin {
   to {
@@ -480,5 +497,5 @@ body::after {
   background: rgba(255, 255, 255, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
-  color: var(--locked);
+  color: var(--accent);
 }

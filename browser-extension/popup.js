@@ -1,0 +1,75 @@
+document.addEventListener("DOMContentLoaded", async () => {
+  const loadingState = document.getElementById("loading-state");
+  const missingState = document.getElementById("missing-state");
+  const foundState = document.getElementById("found-state");
+
+  const loginBtn = document.getElementById("login-udemy-btn");
+  const connectBtn = document.getElementById("connect-btn");
+
+  let extractedToken = null;
+  const UDEMY_URL = "https://www.udemy.com";
+  const TARGET_SA_URL = "http://localhost:8000";
+
+  function switchState(stateEl) {
+    [loadingState, missingState, foundState].forEach((el) =>
+      el.classList.remove("active"),
+    );
+    stateEl.classList.add("active");
+  }
+
+  try {
+    // Attempt to get the cookie
+    const cookie = await chrome.cookies.get({
+      url: UDEMY_URL,
+      name: "access_token",
+    });
+
+    if (cookie && cookie.value) {
+      extractedToken = cookie.value;
+      switchState(foundState);
+    } else {
+      switchState(missingState);
+    }
+  } catch (err) {
+    console.error("Cookie extraction error:", err);
+    switchState(missingState);
+  }
+
+  // Handle Login to Udemy
+  loginBtn.addEventListener("click", () => {
+    chrome.tabs.create({ url: UDEMY_URL });
+  });
+
+  // Handle Launch & Connect
+  connectBtn.addEventListener("click", async () => {
+    // 1. Find if localhost:8000 is already open
+    const tabs = await chrome.tabs.query({ url: "*://localhost/*" });
+
+    let targetTab = null;
+    if (tabs.length > 0) {
+      // Find the specific localhost:8000 tab if possible
+      targetTab = tabs.find((t) => t.url.startsWith(TARGET_SA_URL)) || tabs[0];
+      await chrome.tabs.update(targetTab.id, { active: true });
+    } else {
+      // Create new tab
+      targetTab = await chrome.tabs.create({
+        url: `${TARGET_SA_URL}/app/index.html`,
+      });
+    }
+
+    // 2. Inject the token directly into localStorage on the target tab
+    // We execute a script in the context of the target tab.
+    await chrome.scripting.executeScript({
+      target: { tabId: targetTab.id },
+      func: (token) => {
+        localStorage.setItem("udemy_token", token);
+        // Force reload so the app picks up the token immediately
+        window.location.reload();
+      },
+      args: [extractedToken],
+    });
+
+    // 3. Close the popup
+    window.close();
+  });
+});
